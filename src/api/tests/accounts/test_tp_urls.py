@@ -478,14 +478,6 @@ class LogoutViewForTopUserTestCase(APITestCase, InitialUserDataMixin):
         response = self.client.get(reverse('api:tp_edit_profile'))
         self.assertEqual(response.status_code, 200)
 
-        # Create a shift
-        StoreShift.objects.create(
-            store=self.store1,
-            user=self.top_profile1.user,
-            starting_cash=4500,
-            actual_cash=38000
-        )
-
         # Create user FirebaseDevice
         FirebaseDevice.objects.create(
             user = self.top_profile1.user,
