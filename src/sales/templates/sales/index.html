@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<div class="container-fluid">
+
+    <div class="row receipt-main-row">
+
+        <div id="main" class="col-sm-12">
+            <div class="card receipt-card">
+                <div class="text-center receipt-title">
+                    <h2>My Receipts</h2> 
+                </div>
+
+                {% if latest_receipt_list %}
+                    {% for receipt in latest_receipt_list %}
+                        <div class="card-block receipt-card-block">
+                            <div class="row receipt-row">
+                                <div class="col-sm-4 receipt">
+                                    <a href="{% url 'sales:receipt_view' receipt.pk %}">{{ receipt.get_name }}</a>
+                                </div>
+                                
+                            </div>
+                            <hr>
+                        </div>
+                    {% endfor %}
+
+                    <nav class="text-center">
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if page_obj.has_previous %}
+                                    <a href="?page={{ page_obj.previous_page_number }}"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>Previous</a>
+                                {% endif %}
+                                <span class="current">
+                                    Page {{ page_obj.number }} of {{ paginator.num_pages }}.
+                                </span>
+                                {% if page_obj.has_next %}
+                                    <a href="?page={{ page_obj.next_page_number }}">Next<span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span></a>
+                                {% endif %}
+                            </span>
+                        </div>
+                    </nav>
+
+                {% else %}
+                    <div class="card-block no-receipts text-center">
+                        <p>No results found.</p>
+                    </div>
+                {% endif %}
+            </div>     
+        </div>
+
+   </div> 
+</div> 
+	
+
+
+
+
+
+
+{% endblock %}

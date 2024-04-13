@@ -1,0 +1,302 @@
+{% if request.user.is_authenticated %}
+<!-- At the top -->
+{% load static %}
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MoniTraq</title>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'accounts/css/bootstrap/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'accounts/css/main.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'accounts/css/fontawesome/css/all.min.css' %}" />
+
+    <link rel="stylesheet" type="text/css" href="{% static 'accounts/js/cropperv/dist/cropper.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'accounts/js/cropperv/cropper_main.css' %}" />
+
+</head>
+
+<body>
+
+    <!-- Directly after <body> -->
+    <div class="wrapper">
+
+        <nav class="sidenav" id="mySidenav">
+
+            <div class="sidenav-logo-arrow" id="sidenav-logo-arrow-id">
+                <div class="row">
+
+                    <div class="col-12 sidenav-close-button" id="sidenav-close-button-id">
+                        <i class="fas fa-arrow-left close-sidenav-icon float-right" onclick="closeNav()"></i>
+                    </div>
+
+                    <div class="col-12 sidenav-logo">
+                        <img src="{% static 'accounts/css/imgs/logo.png' %}" class="img-fluid" alt="Responsive image" />
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="sidebar-sticky sidebar-menu">
+
+                {% if request.user.user_type == 1 %}
+
+                <ul class="nav flex-column">
+
+                    {% if request.user.is_superuser %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="">
+                            <i class="fas fa-chart-line"></i>Admin Analytics</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">
+                            <i class="fas fa-credit-card"></i>Admin Make Payment</a>
+                    </li>
+                    {% endif %}
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="">
+                            <i class="fas fa-chart-line"></i>Analytics</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">
+                            <i class="fas fa-users"></i>Supervisors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">
+                            <i class="fas fa-users"></i>Team</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">
+                            <i class="fas fa-credit-card"></i>Make Payment</a>
+                    </li>
+
+                </ul>
+
+                {% elif request.user.user_type == 2 %}
+
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="">
+                            <i class="fas fa-chart-line"></i>Analytics</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">
+                            <i class="fas fa-users"></i>Team</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">
+                            <i class="fas fa-credit-card"></i>Make Payment</a>
+                    </li>
+                </ul>
+
+                {% elif request.user.user_type == 3 %}
+
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="">
+                            <i class="fas fa-tachometer-alt"></i>Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">
+                            <i class="fas fa-chart-line"></i>Analytics</a>
+                    </li>
+                    
+                </ul>
+                {% endif %}
+            </div>
+        </nav>
+
+        <div id="main-right-side-content">
+
+            <!-- Header -->
+            {% block header %}
+
+            {% if request.user.user_type == 1 %}
+
+            <nav class="navbar navbar-expand navbar-dark ml-auto" id="top-navbar">
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav mr-auto ">
+                        <li class="nav-item active" id="close-open-sidenav-cont">
+                            <i class="fas fa-bars open-sidenav-icon" onclick="openNav(true)"></i>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/"><i class="fas fa-home"></i></a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        
+                        <div class="dropdown top-navbar-dropdown mr-auto my-md-0">
+                            <button type="button" class="btn dropdown-toggle btn-primary-outline"
+                                data-toggle="dropdown">
+                                <a class="navbar-brand" href="#">
+                                    {% if request.user.get_profile_image_url %}
+                                    <img src={{request.user.get_profile_image_url}} alt="profile-picture"
+                                        class="rounded-circle" style="width:40px;">
+                                    {% endif %}
+
+                                </a>
+                                <span class="dropdown-user-name">{{request.user.get_full_name}}</span>
+                            </button>
+                            <div class="dropdown-menu ">
+                                <a class="dropdown-item" href="{% url 'profiles:profile'%}"><i
+                                        class="fas fa-user-alt"></i>My Profile</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href=""><i
+                                        class="fas fa-sign-out-alt"></i>Logout</a>
+                            </div>
+                        </div>
+                    </ul>
+                </div>
+            </nav>
+
+
+
+
+
+
+            {% elif request.user.user_type == 2 %}
+
+
+            <nav class="navbar navbar-expand navbar-dark ml-auto" id="top-navbar">
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav mr-auto ">
+                        <li class="nav-item active" id="close-open-sidenav-cont">
+                            <i class="fas fa-bars open-sidenav-icon" onclick="openNav(true)"></i>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/">
+                                <i class="fas fa-home"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        <div class="dropdown top-navbar-dropdown mr-auto my-md-0">
+                            <button type="button" class="btn dropdown-toggle btn-primary-outline"
+                                data-toggle="dropdown">
+                                <a class="navbar-brand" href="#">
+                                    {% if request.user.get_profile_image_url %}
+
+                                    <img src={{request.user.get_profile_image_url}} alt="profile-picture"
+                                        class="rounded-circle" style="width:40px;">
+                                    {% endif %}
+
+                                </a>
+                                <span class="dropdown-user-name">{{request.user.get_full_name}}</span>
+                            </button>
+                            <div class="dropdown-menu ">
+                                <a class="dropdown-item" href=""><i
+                                        class="fas fa-user-alt"></i>My Profile</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="}"><i
+                                        class="fas fa-sign-out-alt"></i>Logout</a>
+                            </div>
+                        </div>
+                    </ul>
+                </div>
+            </nav>
+
+            {% elif request.user.user_type == 3 %}
+
+
+            <nav class="navbar navbar-expand navbar-dark ml-auto" id="top-navbar">
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav mr-auto ">
+                        <li class="nav-item active" id="close-open-sidenav-cont">
+                            <i class="fas fa-bars open-sidenav-icon" onclick="openNav(true)"></i>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/">
+                                <i class="fas fa-home"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+
+                        <div class="dropdown top-navbar-dropdown mr-auto my-md-0">
+                            <button type="button" class="btn dropdown-toggle btn-primary-outline"
+                                data-toggle="dropdown">
+                                <a class="navbar-brand" href="#">
+                                    {% if request.user.get_profile_image_url %}
+
+                                    <img src={{request.user.get_profile_image_url}} alt="profile-picture"
+                                        class="rounded-circle" style="width:40px;">
+                                    {% endif %}
+
+                                </a>
+                                <span class="dropdown-user-name">{{request.user.get_full_name}}</span>
+                            </button>
+                            <div class="dropdown-menu ">
+                                <a class="dropdown-item" href=""><i
+                                        class="fas fa-chart-line"></i>Dashboard</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href=""><i
+                                        class="fas fa-user-alt"></i>My Profile</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href=""><i
+                                        class="fas fa-sign-out-alt"></i>Logout</a>
+                            </div>
+                        </div>
+                    </ul>
+                </div>
+            </nav>
+
+
+
+            {% endif %}
+
+
+            {% endblock %}
+
+
+            <div class="content-container">
+
+
+
+                <!-- Content -->
+                {% block content %}
+                {% endblock %}
+                <!-- Content -->
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="{% static 'accounts/js/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'accounts/js/popper/popper.js' %}"></script>
+    <script src="{% static 'accounts/css/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'accounts/js/main.js' %}"></script>
+    <script src="{% static 'accounts/js/utils.js' %}"></script>
+
+
+
+    {% block javascript %}
+    {% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+
+
+
+
+
+</html>
+
+{% endif %}

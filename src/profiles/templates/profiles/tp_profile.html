@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<div class="container-fluid">
+    <div class="row user-profile">
+
+        <div class="col-12 mx-auto">
+            <div class="card my-2 profile-user-card profile-dashboard-card">
+  
+                <div class="card-body">
+
+
+                    <div class="row user-profile">
+
+                        <div class="col-12 profile-picture-view">
+                            <div class="row profile-picture-block">
+                                <div class="col-12 profile-title text-center">
+                                    <h4 class="profile-title">About</h4>   
+                                </div>
+                                <div class="col-12 col-md-2 profile-picture-box">
+                                    {% if user_details.profile_image_url %}
+                                        <img src={{user_details.profile_image_url}} alt="profile-picture" class="rounded-circle">                              
+                                    {% endif %}
+                                </div>
+                                <div class="col-12 col-md-1 camera-icon">
+                                    <a href="{% url user_details.edit_profile_image_url %}">
+                                        <i class="fas fa-camera"></i>   
+                                    </a>
+                                </div>
+                                <div class="col-12 col-md-4 profile-name">
+                                    <h4>{{user_details.full_name}}</h4>   
+                                </div>
+
+                                <div class="col-12 col-md-4 profile-role">
+                                    <div class="row">
+                                        <div class="col-12 profile-role-name text-center">
+                                            <h4 class="fas fa-star"> Admin</h4>
+                                            
+                                        </div>
+                                    </div>
+                                       
+                                </div>
+
+                                
+                                
+                            </div>
+                        </div>
+                    </div>
+
+
+                	<div class="row">
+
+                		<div class="col-12 col-md-6 profile-about">
+                			<div class="row">
+
+                				<div class="col-2 profile-info-icon">
+                					<i class="fas fa-envelope"></i>	
+     					        </div>
+
+     					        <div class="col-10 profile-info">
+     						        <div class="row">
+     							        <div class="col-12 profile-info-title">
+     								        <p>Email</p>	
+     							        </div>
+     							
+     							        <div class="col-12 profile-info-text">
+     								        <p>{{user_details.email}}</p>	
+     							        </div>
+     						        </div>
+     					        </div>
+                	         </div>
+                		</div>
+
+                		<div class="col-12 col-md-6 profile-about">
+                			<div class="row">
+
+                				<div class="col-2 profile-info-icon">
+                					<i class="fas fa-mobile-alt"></i>	
+     					        </div>
+
+     					        <div class="col-10 profile-info">
+     						        <div class="row">
+     							        <div class="col-12 profile-info-title">
+     								        <p>Phone</p>	
+     							        </div>
+     							
+     							        <div class="col-12 profile-info-text">
+     								        <p>{{user_details.phone}}</p>	
+     							        </div>
+     						        </div>
+     					        </div>
+                	         </div>
+
+                		</div>
+
+                		<div class="col-12 col-md-6 profile-about">
+                			<div class="row">
+
+                				<div class="col-2 profile-info-icon">
+                					<i class="fas fa-map-marker-alt"></i>	
+     					        </div>
+
+     					        <div class="col-10 profile-info">
+     						        <div class="row">
+     							        <div class="col-12 profile-info-title">
+     								        <p>Location</p>	
+     							        </div>
+     							
+     							        <div class="col-12 profile-info-text">
+     								        <p>{{user_details.location}}</p>	
+     							        </div>
+     						        </div>
+     					        </div>
+                	         </div>
+                		</div>
+
+                        <div class="col-12 col-md-6 profile-about">
+                            <div class="row">
+
+                                <div class="col-2 profile-info-icon">
+                                    <i class="fas fa-money-bill"></i>   
+                                </div>
+
+                                <div class="col-10 profile-info">
+                                    <div class="row">
+                                        <div class="col-12 profile-info-title">
+                                            <p>Currency</p> 
+                                        </div>
+                                
+                                        <div class="col-12 profile-info-text">
+                                            <p>{{user_details.currency}}</p>    
+                                        </div>
+                                    </div>
+                                </div>
+                             </div>
+                        </div>
+
+                		<div class="col-12 col-md-6 profile-about">
+                			<div class="row">
+
+                				<div class="col-2 profile-info-icon">
+                					<i class="fas fa-calendar-alt"></i>	
+     					        </div>
+
+     					        <div class="col-10 profile-info">
+     						        <div class="row">
+     							        <div class="col-12 profile-info-title">
+     								        <p>Join date</p>	
+     							        </div>
+     							
+     							        <div class="col-12 profile-info-text">
+     								        <p>{{user_details.join_date}}</p>	
+     							        </div>
+     						        </div>
+     					        </div>
+                	         </div>
+
+                		</div>
+
+                	</div>
+
+                	
+
+
+
+
+
+                	
+
+                </div>
+                <h5 class="card-header text-center">Settings</h5>
+                <div class="card-body">
+
+                	<div class="row proifle-settings">
+     				    <div class="col-12 col-md-6 profile-setting-button">
+     						<a class="btn btn-lg btn-primary btn-block mq-btn" id="mq-btn-id" href="{% url user_details.edit_profile_url %}" role="button">Edit Profile</a>
+     					</div>
+     					
+     				</div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+
+
+
+
+
+ 
+{% endblock %}
+
+

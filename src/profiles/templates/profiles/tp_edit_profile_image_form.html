@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block javascript %}
+<script src="{% static 'accounts/js/cropperv/dist/cropper.js' %}"></script>
+<script src="{% static 'accounts/js/my_image_cropper.js' %}"></script>
+<script type="text/javascript">
+
+  $(function () {
+
+    SetImageCropperConfig();
+
+  });
+</script>
+
+{% endblock %}
+
+{% block content %}
+
+{% include 'form_image_field_template.html' with form_title='Change Profile Picture' form_submit_button_text='Save'%}
+
+
+{% endblock %}

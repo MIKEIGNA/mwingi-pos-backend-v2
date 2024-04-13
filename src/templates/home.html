@@ -1,0 +1,32 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+
+<section class="home-section gradient-custom">
+    <div class="container py-5 h-100">
+        <!-- row 1 -->
+
+        <div class="row d-flex justify-content-center align-items-center h-50">
+
+     
+            <div class="d-grid gap-2 col-12 col-sm-6 mx-auto pt-2">
+                <a href="{% url 'loyverse:sync'%}" class="btn btn-primary" type="button">Loyverse Sync</a>
+            </div>
+            
+            <div class="d-grid gap-2 col-12 col-sm-6 mx-auto pt-2">
+                <a href="{% url 'loyverse:download_log_file_critical'%}" class="btn btn-primary" type="button">Log Critical</a>
+            </div>
+            <div class="d-grid gap-2 col-12 col-sm-6 mx-auto pt-2">
+                <a href="{% url 'loyverse:download_log_pageviews'%}" class="btn btn-primary" type="button">Log Pageviews</a>
+            </div>
+            <div class="d-grid gap-2 col-12 col-sm-6 mx-auto pt-2">
+                <a href="{% url 'loyverse:download_log_software_tasks'%}" class="btn btn-primary" type="button">Log Software Tasks</a>
+            </div>
+
+            <div class="d-grid gap-2 col-12 col-sm-6 mx-auto pt-2">
+                <a href="{% url 'loyverse:download_file'%}" class="btn btn-primary" type="button">Download file</a>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+{% endblock %}

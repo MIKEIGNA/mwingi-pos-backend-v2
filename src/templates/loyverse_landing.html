@@ -1,0 +1,50 @@
+{% extends "base.html" %} {% load static %} {% load static %} {% block content %}
+
+<div class="container loyverse-landing-page">
+
+    <h2>{{page_title}}</h2>
+    {% if success %}
+
+    <div class="card success">
+        <div class="icon-background">
+            <i class="checkmark">✓</i>
+        </div>
+        <h1>Success</h1>
+
+        <p>{{message}}</p>
+
+        {% if extra_message1 %}
+        <p>{{extra_message1}}</p>
+        {% endif %}
+
+    </div>
+
+    {% else %}
+
+    <div class="card failure">
+
+        <div class="icon-success-background">
+            <i class="errormark">❌</i>
+        </div>
+
+        <h1>Failure</h1>
+
+        <p>{{message}}</p>
+
+        {% if extra_message1 %}
+        <p>{{extra_message1}}</p>
+        {% endif %}
+
+    </div>
+
+    {% endif %}
+
+
+
+
+
+
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,408 @@
+{% load i18n %}{% autoescape off %}
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Email Receipt</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type="text/css">
+        /**
+   * Google webfonts. Recommended to include the .woff version for cross-client compatibility.
+   */
+        @media screen {
+            @font-face {
+                font-family: 'Source Sans Pro';
+                font-style: normal;
+                font-weight: 400;
+                src: local('Source Sans Pro Regular'), local('SourceSansPro-Regular'), url(https://fonts.gstatic.com/s/sourcesanspro/v10/ODelI1aHBYDBqgeIAH2zlBM0YzuT7MdOe03otPbuUS0.woff) format('woff');
+            }
+
+            @font-face {
+                font-family: 'Source Sans Pro';
+                font-style: normal;
+                font-weight: 700;
+                src: local('Source Sans Pro Bold'), local('SourceSansPro-Bold'), url(https://fonts.gstatic.com/s/sourcesanspro/v10/toadOcfmlt9b38dHJxOBGFkQc6VGVFSmCnC_l7QZG60.woff) format('woff');
+            }
+        }
+
+        /**
+   * Avoid browser level font resizing.
+   * 1. Windows Mobile
+   * 2. iOS / OSX
+   */
+        body,
+        table,
+        td,
+        a {
+            -ms-text-size-adjust: 100%;
+            /* 1 */
+            -webkit-text-size-adjust: 100%;
+            /* 2 */
+        }
+
+        /**
+   * Remove extra space added to tables and cells in Outlook.
+   */
+        table,
+        td {
+            mso-table-rspace: 0pt;
+            mso-table-lspace: 0pt;
+        }
+
+        /**
+   * Better fluid images in Internet Explorer.
+   */
+        img {
+            -ms-interpolation-mode: bicubic;
+        }
+
+        /**
+   * Remove blue links for iOS devices.
+   */
+        a[x-apple-data-detectors] {
+            font-family: inherit !important;
+            font-size: inherit !important;
+            font-weight: inherit !important;
+            line-height: inherit !important;
+            color: inherit !important;
+            text-decoration: none !important;
+        }
+
+        /**
+   * Fix centering issues in Android 4.4.
+   */
+        div[style*="margin: 16px 0;"] {
+            margin: 0 !important;
+        }
+
+        body {
+            width: 100% !important;
+            height: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        /**
+   * Collapse table borders to avoid space between cells.
+   */
+        table {
+            border-collapse: collapse !important;
+        }
+
+        a {
+            color: #1a82e2;
+        }
+
+        img {
+            height: auto;
+            line-height: 100%;
+            text-decoration: none;
+            border: 0;
+            outline: none;
+        }
+    </style>
+
+</head>
+
+<body style="background-color: #D2C7BA;">
+
+    <!-- start body -->
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+
+        <!-- start logo -->
+        <tr>
+            <td align="center" bgcolor="#D2C7BA">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 400px;">
+                <tr>
+                <td align="center" valign="top" style="padding: 36px 24px;">
+    
+                </td>
+                </tr>
+            </table>
+            </td>
+        </tr>
+        <!-- end logo -->
+
+        <!-- start header block -->
+        <tr>
+            <td align="center" bgcolor="#D2C7BA" valign="top" width="100%">
+                <table align="center" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%"
+                    style="max-width: 400px;">
+                    <tr>
+                        <td align="center" valign="top" style="font-size: 0; border-bottom: 0px solid #d4dadf">
+
+                            <div style="display: inline-block; width: 100%; vertical-align: top;">
+                                <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%"
+                                    style="max-width: 400px;">
+
+                                    {% if receipt.is_refund %}
+                                        <tr>
+                                            <td align="right" valign="top"
+                                                style="
+                                                    padding-bottom: 0px; 
+                                                    padding-right: 5px; 
+                                                    font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; 
+                                                    font-size: 16px; 
+                                                    line-height: 9px;
+                                                    color: red">
+                                                <p><strong>Refunded</strong></p>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+
+                                    <tr>
+                                        <td align="center" valign="top"
+                                            style="padding-bottom: 0px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 9px;">
+
+                                            {% if header_footer.header1 %}
+                                                <p><strong>{{header_footer.header1}}</strong></p>
+                                            {% endif %}
+                                            {% if header_footer.header2 %}
+                                                <p>{{header_footer.header2}}</p>
+                                            {% endif %}
+                                            {% if header_footer.header3 %}
+                                                <p>{{header_footer.header3}}</p>
+                                            {% endif %}
+                                            {% if header_footer.header4 %}
+                                                <p>{{header_footer.header4}}</p>
+                                            {% endif %}
+                                            {% if header_footer.header5 %}
+                                                <p>{{header_footer.header5}}</p>
+                                            {% endif %}
+                                            {% if header_footer.header6 %}
+                                                <p>{{header_footer.header6}}</p>
+                                            {% endif %}
+
+                                            <p style="padding-top: 20px; font-size: 25px; font-weight: bold;">Sale Receipt</p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <!-- end header block -->
+
+        <!-- start address block -->
+        <tr>
+            <td align="center" bgcolor="#D2C7BA" valign="top" width="100%">
+                <table align="center" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%"
+                    style="max-width: 400px;">
+                    <tr>
+                        <td align="left" valign="top" style="font-size: 0;">
+                            <div style="display: inline-block; width: 100%; vertical-align: top;">
+                                <table align="left" border="0" cellpadding="0" cellspacing="0" width="100%"
+                                    style="max-width: 400px;">
+                                    <tr>
+                                        <td align="left" valign="top"
+                                            style="padding-bottom: 0px; padding-left: 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 9px;">
+                                            
+                                            {% if receipt.get_name %}
+                                                <p>{{ receipt.get_name }}</p>
+                                            {% endif %}
+                                            {% if local_date %}
+                                                <p>{{ local_date }}</p>
+                                            {% endif %}
+                                            {% if receipt_data.sale_maker_desc %}
+                                                <p>{{receipt_data.sale_maker_desc }}</p>
+                                            {% endif %}
+                                            {% if receipt.get_customer_name_and_points_desc %}
+                                                <p>{{ receipt.get_customer_name_and_points_desc }}</p>
+                                            {% endif %}
+
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <!-- end address block -->
+
+        <!-- start item block -->
+        <tr>
+            <td align="center" bgcolor="#D2C7BA">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 400px;">
+
+                    <!-- start receipt table -->
+                    <tr>
+                        <td align="left" bgcolor="#ffffff"
+                            style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                <tr>
+                                    <td align="left" width="75%"
+                                        style="padding: 12px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
+                                        <strong>Item</strong></td>
+                                    <td align="left" width="25%"
+                                        style="padding: 12px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
+                                        <strong>Amount</strong></td>
+                                </tr>
+
+                                {% for product in receipt_data.table_content %}
+                                    <tr>
+                                        <td align="left" width="75%"
+                                            style="padding: 6px 12px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
+                                            {{product.units}} X {{product.product_info.name}}</td>
+                                        <td align="left" width="25%"
+                                            style="padding: 6px 12px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
+                                            {{product.price}}</td>
+                                    </tr>
+
+                                    {% for modifier in product.modifier_options_info %}
+                                        <tr>
+                                            <td align="left" width="75%"
+                                                style="padding: 6px 12px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 9px; color: grey">
+                                                + {{modifier}}</td>
+                            
+                                        </tr>
+                                    {% endfor %}
+
+                                {% endfor %}
+
+                                <tr>
+                                    <td align="left" width="75%"
+                                        style="padding: 12px; padding-top: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 9px; border-top: 2px dashed #D2C7BA;">
+                                        Total items</td>
+                                    <td align="left" width="25%"
+                                        style="padding: 12px; padding-top: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 9px; border-top: 2px dashed #D2C7BA;">
+                                        {{receipt.get_item_units}}</td>
+                                </tr>
+                                <tr>
+                                    <td align="left" width="75%"
+                                        style="padding: 12px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 9px;">
+                                        Taxes</td>
+                                    <td align="left" width="25%"
+                                        style="padding: 12px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 9px;">
+                                        {{receipt.tax_amount}}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td align="left" width="75%"
+                                        style="padding: 12px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 9px;">
+                                        Discounts</td>
+                                    <td align="left" width="25%"
+                                        style="padding: 12px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 9px;">
+                                        {{receipt.discount_amount}}</strong></td>
+                                </tr>
+
+                
+                                <tr>
+                                    <td align="left" width="75%"
+                                        style="padding: 12px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 9px; border-bottom: 2px dashed #D2C7BA;">
+                                        <strong>Total</strong></td>
+                                    <td align="left" width="25%"
+                                        style="padding: 12px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 9px; border-bottom: 2px dashed #D2C7BA;">
+                                        <strong>{{receipt.total_amount}}</strong></td>
+                                </tr>
+
+                                {% for payment in receipt_data.payment_list %}
+                                    <tr>
+                                        <td align="left" width="75%"
+                                            style="padding: 12px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 9px;">
+                                            {{payment.name}}</td>
+                                        <td align="left" width="25%"
+                                            style="padding: 12px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 9px;">
+                                            {{payment.amount}}</strong></td>
+                                    </tr>
+                                {% endfor %}
+
+                                <tr>
+                                    <td align="left" width="75%"
+                                        style="padding: 12px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 9px; border-top: 2px dashed #D2C7BA;">
+                                        Received</td>
+                                    <td align="left" width="25%"
+                                        style="padding: 12px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 9px; border-top: 2px dashed #D2C7BA;">
+                                        {{receipt.given_amount}}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td align="left" width="75%"
+                                        style="padding: 12px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 9px;">
+                                        Change</td>
+                                    <td align="left" width="25%"
+                                        style="padding: 12px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 9px;">
+                                        {{receipt.change_amount}}</strong></td>
+                                </tr>
+
+                                
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- end reeipt table -->
+
+                </table>
+            </td>
+        </tr>
+        <!-- end item block -->
+
+        <!-- start footer block -->
+        <tr>
+            <td align="center" bgcolor="#D2C7BA" valign="top" width="100%">
+                <table align="center" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%"
+                    style="max-width: 400px;">
+                    <tr>
+                        <td align="center" valign="top" style="font-size: 0; border-bottom: 0px solid #d4dadf">
+
+                            <div style="display: inline-block; width: 100%; vertical-align: top;">
+                                <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%"
+                                    style="max-width: 400px;">
+                                    <tr>
+                                        <td align="center" valign="top"
+                                            style="padding-bottom: 0px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 9px;">
+
+                                            {% if header_footer.footer1 %}
+                                                <p>{{header_footer.footer1}}</p>
+                                            {% endif %}
+                                            {% if header_footer.footer2 %}
+                                                <p>{{header_footer.footer2}}</p>
+                                            {% endif %}
+                                            {% if header_footer.footer3 %}
+                                                <p>{{header_footer.footer3}}</p>
+                                            {% endif %}
+                                            {% if header_footer.footer4 %}
+                                                <p>{{header_footer.footer4}}</p>
+                                            {% endif %}
+                                            {% if header_footer.footer5 %}
+                                                <p>{{header_footer.footer5}}</p>
+                                            {% endif %}
+                                            {% if header_footer.footer6 %}
+                                                <p>{{header_footer.footer6}}</p>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <!-- end footer block -->
+
+        <!-- start bottom -->
+        <tr>
+            <td align="center" bgcolor="#D2C7BA" style="padding: 24px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 400px;">
+            </table>
+            </td>
+        </tr>
+        <!-- end bottom -->
+    </table>
+</body>
+
+</html>
+
+
+
+
+
+{% endautoescape %}

@@ -1,0 +1,87 @@
+<div class="container">
+    <div class="row">
+      <div class="col-10 col-md-7 mx-auto">
+        <div class="card form-card my-5">
+          <div class="card-body">
+
+
+            <h3 class="card-form-title text-center">{{form_title}}</h3>
+
+
+            <hr class="below-title-hr">
+
+            {% if extra_message %}
+                <p class="text-center">{{extra_message}}</p>
+                <hr>
+            {% endif %}
+
+            {% if form_type == 'login_form' %}
+                <form action="{% url 'login' %}" method="post" class="form-mt">{% csrf_token %}
+            {% else %}
+                <form action="" method="post" class="form-mt">{% csrf_token %}
+            {% endif %}
+
+
+            {% if form.errors %}
+                
+                {% for error in form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+                {% for field in form %}
+
+                    {% if field.errors %}
+                        <div class="text-center" id="errors">
+	        		        <ol>
+	        		        	{% for error in field.errors %}
+	        		    	        <strong>{{ error|escape }}</strong>
+	        		    	    {% endfor %}
+	        		        </ol>
+                        </div>
+	        		{% endif %}
+
+		
+                    {% if field.help_text == 'switch'%}
+	
+                       <div class="form-label-group">
+
+                            <div class="row">
+
+                                <div class="col-10">
+                                    <label for="{{ field.name }}">{{ field.label }}</label>
+                                </div>
+
+                                <div class="col-2">
+
+                                    <label class="switch">
+                                        {{ field }}
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </div>
+                          
+					    </div>
+                        <hr>
+                    {% else %}
+                        <div class="form-label-group">
+                            <label for="{{ field.name }}">{{ field.label }}</label>
+                            {{ field }}
+                        </div>
+
+                    {% endif %}
+
+				{% endfor %}
+
+    
+                <button class="btn btn-lg btn-primary btn-block mq-btn" id="mq-btn-id" type="submit">{{form_submit_button_text}}</button>
+
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
