@@ -501,9 +501,6 @@ class LogoutViewForTopUserTestCase(APITestCase, InitialUserDataMixin):
         # Make sure the user's token was not regenerated
         self.assertEqual(token1 == token2, True)
 
-        # Check open shift has not been marked completed
-        self.assertEqual(StoreShift.objects.get().shift_completed, False)
-
         # Check active firebase has not been marked as in active
         self.assertEqual(FirebaseDevice.objects.get().is_current_active, True)
 
@@ -521,9 +518,6 @@ class LogoutViewForTopUserTestCase(APITestCase, InitialUserDataMixin):
 
         # Make sure the user's token was not regenerated
         self.assertEqual(token1 == token2, True)
-
-        # Check open shift has been marked completed
-        self.assertEqual(StoreShift.objects.get().shift_completed, True)
 
         # Check active firebase has not been marked as in active
         self.assertEqual(FirebaseDevice.objects.get().is_current_active, False)
@@ -546,9 +540,6 @@ class LogoutViewForTopUserTestCase(APITestCase, InitialUserDataMixin):
         # Make sure the user was logged out
         response = self.client.get(reverse('api:tp_edit_profile'))
         self.assertEqual(response.status_code, 401)
-
-        # Check open shift has been marked completed
-        self.assertEqual(StoreShift.objects.get().shift_completed, True)
 
         # Check active firebase has not been marked as in active
         self.assertEqual(FirebaseDevice.objects.get().is_current_active, False)

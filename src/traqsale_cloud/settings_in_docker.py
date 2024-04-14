@@ -114,14 +114,6 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Africa/Nairobi'
 
-# CELERY_BROKER_URL = "sqs://%s:%s@" % (os.environ.get('AWS_QUEUE_ACCESS_KEY_ID'), os.environ.get('AWS_QUEUE_ACCESS_KEY'))
-# CELERY_RESULT_BACKEND = None
-# CELERY_ACCEPT_CONTENT = ['application/json']
-# CELERY_TASK_SERIALIZER = 'json'
-# CELERY_RESULT_SERIALIZER = 'json'
-# CELERY_TIMEZONE = 'Africa/Nairobi'
-
-
 print("############################")
 print(CELERY_BROKER_URL)
 

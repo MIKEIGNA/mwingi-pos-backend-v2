@@ -2009,6 +2009,55 @@ class StockAdjustmentLineTestCase(TestCase):
         self.assertEqual(historys[1].adjustment, Decimal('14.00'))
         self.assertEqual(historys[1].stock_after, Decimal('169.00'))
 
+    def test_if_received_items_stock_adjustment_line_creation_will_update_stock_level_and_product_when_units_are_negative(self):
+        
+        # Update stock level for product 1 to negative
+        StockLevel.objects.filter(product=self.product1).update(units=-300)
+
+        # Confirm stock level units
+        self.assertEqual(StockLevel.objects.get(product=self.product1).units, -300.00)
+        self.assertEqual(StockLevel.objects.get(product=self.product2).units, 155.00)
+
+        self.create_receive_items_stock_adjustment()
+
+        # Check if stock was updated
+        self.assertEqual(StockLevel.objects.get(store=self.store, product=self.product1).units, 50.00)
+        self.assertEqual(StockLevel.objects.get(store=self.store, product=self.product2).units, 169.00)
+
+        # Check if cost was updated
+        self.assertEqual(Product.objects.get(id=self.product1.id).cost, Decimal('194.62'))
+        self.assertEqual(Product.objects.get(id=self.product2.id).cost, Decimal('1108.88'))
+
+        ############ Test if Inventory History will be created
+        historys = InventoryHistory.objects.filter(store=self.store).order_by('id')
+        self.assertEqual(historys.count(), 2)
+
+        # Inventory history 1
+        self.assertEqual(historys[0].user, self.user)
+        self.assertEqual(historys[0].product, self.product1)
+        self.assertEqual(historys[0].store, self.store)
+        self.assertEqual(historys[0].product, self.product1)
+        self.assertEqual(historys[0].reason, InventoryHistory.INVENTORY_HISTORY_RECEIVE)
+        self.assertEqual(historys[0].change_source_reg_no, self.stock_adjustment.reg_no)
+        self.assertEqual(historys[0].change_source_desc, 'Receive')
+        self.assertEqual(historys[0].change_source_name, self.stock_adjustment.__str__())
+        self.assertEqual(historys[0].line_source_reg_no, self.stock_adjustment1.reg_no)
+        self.assertEqual(historys[0].adjustment, Decimal('350.00'))
+        self.assertEqual(historys[0].stock_after, Decimal('50.00'))
+
+        # Inventory history 2
+        self.assertEqual(historys[1].user, self.user)
+        self.assertEqual(historys[1].product, self.product2)
+        self.assertEqual(historys[1].store, self.store)
+        self.assertEqual(historys[1].product, self.product2)
+        self.assertEqual(historys[1].reason, InventoryHistory.INVENTORY_HISTORY_RECEIVE)
+        self.assertEqual(historys[1].change_source_reg_no, self.stock_adjustment.reg_no)
+        self.assertEqual(historys[1].change_source_desc, 'Receive')
+        self.assertEqual(historys[1].change_source_name, self.stock_adjustment.__str__())
+        self.assertEqual(historys[1].line_source_reg_no, self.stock_adjustment2.reg_no)
+        self.assertEqual(historys[1].adjustment, Decimal('14.00'))
+        self.assertEqual(historys[1].stock_after, Decimal('169.00'))
+
     def test_loss_stock_adjustment_line_fields_after_it_has_been_created(self):
 
         self.create_loss_damage_stock_adjustment(StockAdjustment.STOCK_ADJUSTMENT_LOSS)
@@ -3799,7 +3848,6 @@ class PurchaseOrderModelsMixin:
         )
 
 
-
 class PurchaseOrderTestCase(TestCase, PurchaseOrderModelsMixin):
     
     def setUp(self):
@@ -4217,6 +4265,86 @@ class PurchaseOrderTestCase(TestCase, PurchaseOrderModelsMixin):
         self.assertEqual(historys[0].line_source_reg_no, self.purchase_order_line1.reg_no)
         self.assertEqual(historys[0].adjustment, Decimal('350.00'))
         self.assertEqual(historys[0].stock_after, Decimal('510.00'))
+
+        # Inventory history 2
+        self.assertEqual(historys[1].user, self.user1)
+        self.assertEqual(historys[1].product, self.product2)
+        self.assertEqual(historys[1].store, self.store1)
+        self.assertEqual(historys[1].product, self.product2)
+        self.assertEqual(historys[1].reason, InventoryHistory.INVENTORY_HISTORY_PO_RECEIVE)
+        self.assertEqual(historys[1].change_source_reg_no, po.reg_no)
+        self.assertEqual(historys[1].change_source_desc, 'Receive')
+        self.assertEqual(historys[1].change_source_name, self.purchase_order.__str__())
+        self.assertEqual(historys[1].line_source_reg_no, self.purchase_order_line2.reg_no)
+        self.assertEqual(historys[1].adjustment, Decimal('14.00'))
+        self.assertEqual(historys[1].stock_after, Decimal('159.00'))
+
+    def test_if_po_received_true_will_update_product_stock_level_units_and_price_when_units_is_negative(self):
+
+        # Update stock level for product 1
+        stock_level = StockLevel.objects.get(store=self.store1, product=self.product1)
+        stock_level.units = -160
+        stock_level.save()
+
+        stock_level = StockLevel.objects.get(store=self.store2, product=self.product1)
+        stock_level.units = -140
+        stock_level.save()
+
+        # Update stock level for product 2
+        stock_level = StockLevel.objects.get(store=self.store1, product=self.product2)
+        stock_level.units = 145
+        stock_level.save()
+
+        stock_level = StockLevel.objects.get(store=self.store2, product=self.product2)
+        stock_level.units = 10
+        stock_level.save()
+
+        # First delete all the models
+        PurchaseOrder.objects.all().delete()
+        PurchaseOrderLine.objects.all().delete()
+
+        # Confirm stock level units
+        self.assertEqual(StockLevel.objects.get(store=self.store1, product=self.product1).units, -160.00)
+        self.assertEqual(StockLevel.objects.get(store=self.store2, product=self.product1).units, -140.00)
+        self.assertEqual(StockLevel.objects.get(store=self.store1, product=self.product2).units, 145.00)
+        self.assertEqual(StockLevel.objects.get(store=self.store2, product=self.product2).units, 10.00)
+
+        self.create_purchase_order(self.user1)
+
+        # Delete all additional costs
+        PurchaseOrderAdditionalCost.objects.all().delete()
+
+        po = PurchaseOrder.objects.get()
+
+        po.status = PurchaseOrder.PURCHASE_ORDER_RECEIVED
+        po.save()
+
+        # Check if stock was updated
+        self.assertEqual(StockLevel.objects.get(store=self.store1, product=self.product1).units, 190.00)
+        self.assertEqual(StockLevel.objects.get(store=self.store2, product=self.product1).units, -140.00)
+        self.assertEqual(StockLevel.objects.get(store=self.store1, product=self.product2).units, 159.00)
+        self.assertEqual(StockLevel.objects.get(store=self.store2, product=self.product2).units, 10.00)
+
+        # Check if cost was updated
+        self.assertEqual(Product.objects.get(id=self.product1.id).cost, Decimal('194.62'))
+        self.assertEqual(Product.objects.get(id=self.product2.id).cost, Decimal('291.12'))
+
+        ############ Test if Inventory History will be created
+        historys = InventoryHistory.objects.filter(store=self.store1).order_by('id')
+        self.assertEqual(historys.count(), 2)
+
+        # Inventory history 1
+        self.assertEqual(historys[0].user, self.user1)
+        self.assertEqual(historys[0].product, self.product1)
+        self.assertEqual(historys[0].store, self.store1)
+        self.assertEqual(historys[0].product, self.product1)
+        self.assertEqual(historys[0].reason, InventoryHistory.INVENTORY_HISTORY_PO_RECEIVE)
+        self.assertEqual(historys[0].change_source_reg_no, po.reg_no)
+        self.assertEqual(historys[0].change_source_desc, 'Receive')
+        self.assertEqual(historys[0].change_source_name, self.purchase_order.__str__())
+        self.assertEqual(historys[0].line_source_reg_no, self.purchase_order_line1.reg_no)
+        self.assertEqual(historys[0].adjustment, Decimal('350.00'))
+        self.assertEqual(historys[0].stock_after, Decimal('190.00'))
 
         # Inventory history 2
         self.assertEqual(historys[1].user, self.user1)

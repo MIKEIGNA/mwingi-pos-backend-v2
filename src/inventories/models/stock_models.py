@@ -888,7 +888,8 @@ class StockAdjustmentLine(models.Model):
                     units=Coalesce(Sum('units'), Decimal(0.00))
                 )['units']
 
-                current_stock = total_units
+                current_stock = abs(total_units) # We don't want negative stock
+
                 current_cost = product.cost
                 current_stock_value = current_stock * current_cost
 
@@ -1992,7 +1993,7 @@ class PurchaseOrder(models.Model):
                             units=Coalesce(Sum('units'), Decimal(0.00))
                         )['units']
 
-                        current_stock = total_units
+                        current_stock = abs(total_units) # We don't want negative stock
                         current_cost = line.product.cost
                         current_stock_value = current_stock * current_cost
 
@@ -3063,7 +3064,7 @@ class ProductTransform(models.Model):
                             units=Coalesce(Sum('units'), Decimal(0.00))
                         )['units']
 
-                        current_stock = total_units
+                        current_stock = abs(total_units) # We don't want negative stock
                         current_cost = line.target_product.cost
                         current_stock_value = current_stock * current_cost
 
