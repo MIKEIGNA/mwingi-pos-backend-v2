@@ -23,7 +23,7 @@ from api.serializers import (
     TransferOrderViewStatusSerializer
 )
 from api.utils.api_web_pagination import StandardWebResultsAndStoresSetPagination
-from products.models import Product
+from products.models import Product, ProductProductionMap
 from profiles.models import EmployeeProfile, Profile
 
 from stores.models import Store
@@ -336,17 +336,32 @@ class TransferOrderCompletedView(generics.ListCreateAPIView):
         total_quantity = 0
         for line in lines:
 
-            product = self.get_product(line['loyverse_variant_id'])
+            line_product = self.get_product(line['loyverse_variant_id'])
+            line_quantity = line['quantity']
 
-            if not product:
+            if not line_product:
                 return self.product_error_desc
+            
+            # First check if the product is mapped to another product
+            product_map = ProductProductionMap.objects.filter(
+                product_map=line_product
+            ).first()
 
+            if product_map:
+                master_product = Product.objects.filter(productions__product_map=line_product).first()
+
+                if master_product:
+                    master_product_quantity = line_quantity/product_map.quantity
+
+                    line_product = master_product
+                    line_quantity = master_product_quantity
+            
             lineData.append({
-                'product': product,
-                'quantity': line['quantity'],
+                'product': line_product,
+                'quantity': line_quantity,
             })
 
-            total_quantity += line['quantity']
+            total_quantity += line_quantity
 
         transfer_order = TransferOrder.objects.create(
             user=self.request.user,
@@ -356,16 +371,14 @@ class TransferOrderCompletedView(generics.ListCreateAPIView):
             quantity=total_quantity,
             is_auto_created=True,
             source_description=serializer.validated_data['source_description'],
-
         )
 
         for line in lineData:
-
             TransferOrderLine.objects.create(
                 transfer_order = transfer_order,
                 product= line['product'],
                 quantity = line['quantity'],
-            )
+            ) 
 
         return True
 

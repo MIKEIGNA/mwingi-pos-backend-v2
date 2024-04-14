@@ -1,5 +1,6 @@
 from decimal import Decimal
 import json
+from pprint import pprint
 import uuid
 
 from django.urls import reverse
@@ -12,12 +13,12 @@ from rest_framework.authtoken.models import Token
 from core.test_utils.initial_user_data import InitialUserDataMixin
 from core.test_utils.custom_testcase import APITestCase
 
-from products.models import Product
+from products.models import Product, ProductProductionMap
 
 from mysettings.models import MySetting
 from inventories.models import StockLevel, TransferOrder, TransferOrderLine
 
-'''
+
 class TransferOrderIndexViewTestCase(APITestCase, InitialUserDataMixin):
 
     def setUp(self):
@@ -162,6 +163,7 @@ class TransferOrderIndexViewTestCase(APITestCase, InitialUserDataMixin):
                         self.user1.get_user_timezone()
                     ),
                     'is_auto_created': self.transfer_order2.is_auto_created,
+                    'source_description': self.transfer_order2.source_description,
                     'completion_date': self.transfer_order2.get_completed_date(
                         self.user1.get_user_timezone()
                     )
@@ -177,6 +179,7 @@ class TransferOrderIndexViewTestCase(APITestCase, InitialUserDataMixin):
                         self.user1.get_user_timezone()
                     ),
                     'is_auto_created': self.transfer_order1.is_auto_created,
+                    'source_description': self.transfer_order1.source_description,
                     'completion_date': self.transfer_order1.get_completed_date(
                         self.user1.get_user_timezone()
                     )
@@ -311,6 +314,7 @@ class TransferOrderIndexViewTestCase(APITestCase, InitialUserDataMixin):
                         self.user1.get_user_timezone()
                     ),
                     'is_auto_created': transfer_orders[0].is_auto_created,
+                    'source_description': transfer_orders[0].source_description,
                     'completion_date': transfer_orders[0].get_completed_date(
                         self.user1.get_user_timezone()
                     )
@@ -365,6 +369,7 @@ class TransferOrderIndexViewTestCase(APITestCase, InitialUserDataMixin):
                         self.user1.get_user_timezone()
                     ),
                     'is_auto_created': self.transfer_order2.is_auto_created,
+                    'source_description': self.transfer_order2.source_description,
                     'completion_date': self.transfer_order2.get_completed_date(
                         self.user1.get_user_timezone()
                     )
@@ -419,6 +424,7 @@ class TransferOrderIndexViewTestCase(APITestCase, InitialUserDataMixin):
                         self.user1.get_user_timezone()
                     ),
                     'is_auto_created': self.transfer_order1.is_auto_created,
+                    'source_description': self.transfer_order1.source_description,
                     'completion_date': self.transfer_order1.get_completed_date(
                         self.user1.get_user_timezone()
                     )
@@ -473,6 +479,7 @@ class TransferOrderIndexViewTestCase(APITestCase, InitialUserDataMixin):
                         self.user1.get_user_timezone()
                     ),
                     'is_auto_created': self.transfer_order2.is_auto_created,
+                    'source_description': self.transfer_order2.source_description,
                     'completion_date': self.transfer_order2.get_completed_date(
                         self.user1.get_user_timezone()
                     )
@@ -530,6 +537,7 @@ class TransferOrderIndexViewTestCase(APITestCase, InitialUserDataMixin):
                         self.user1.get_user_timezone()
                     ),
                     'is_auto_created': self.transfer_order2.is_auto_created,
+                    'source_description': self.transfer_order2.source_description,
                     'completion_date': self.transfer_order2.get_completed_date(
                         self.user1.get_user_timezone()
                     )
@@ -652,8 +660,8 @@ class TransferOrderIndexViewTestCase(APITestCase, InitialUserDataMixin):
         response = self.client.get(
                 reverse('api:transfer_order_index'))
         self.assertEqual(response.status_code, 401)
-'''
         
+
 class TransferOrderCreateViewTestCase(APITestCase, InitialUserDataMixin):
 
     def setUp(self):
@@ -1043,7 +1051,6 @@ class TransferOrderCreateViewTestCase(APITestCase, InitialUserDataMixin):
         )
         self.assertEqual(response.status_code, 401)
 
-
 class TransferOrderCompletedViewTestCase(APITestCase, InitialUserDataMixin):
 
     def setUp(self):
@@ -1091,6 +1098,8 @@ class TransferOrderCompletedViewTestCase(APITestCase, InitialUserDataMixin):
         self.client = APIClient()
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
 
+        self.create_product_maps_for_sugar()
+
 
         # Create models
         # Creates products
@@ -1121,12 +1130,90 @@ class TransferOrderCompletedViewTestCase(APITestCase, InitialUserDataMixin):
         stock_level = StockLevel.objects.get(store=self.store1, product=self.product2)
         stock_level.units = 155
         stock_level.save()
+
+    def create_product_maps_for_sugar(self):
+
+        sugar_sack = Product.objects.create(
+            profile=self.top_profile1,
+            name="Sugar 50kg Sack",
+            price=10000,
+            cost=9000,
+            barcode='code123',
+            loyverse_variant_id=uuid.uuid4()
+        )
+
+        sugar_1kg = Product.objects.create(
+            profile=self.top_profile1,
+            name="Sugar 1kg",
+            price=200,
+            cost=180,
+            barcode='code123',
+            loyverse_variant_id=uuid.uuid4()
+        )
+
+        sugar_500g = Product.objects.create(
+            profile=self.top_profile1,
+            name="Sugar 500g",
+            price=100,
+            cost=90,
+            barcode='code123',
+            loyverse_variant_id=uuid.uuid4()
+        )
+
+        sugar_250g = Product.objects.create(
+            profile=self.top_profile1,
+            name="Sugar 250g",
+            price=50,
+            cost=45,
+            barcode='code123',
+            loyverse_variant_id=uuid.uuid4()
+        )
+
+        # Create master product with 2 productions
+        sugar_1kg_map = ProductProductionMap.objects.create(
+            product_map=sugar_1kg,
+            quantity=50,
+            is_auto_repackage=True
+
+        )
+
+        sugar_500g_map = ProductProductionMap.objects.create(
+            product_map=sugar_500g,
+            quantity=100
+        )
+
+        sugar_250g_map = ProductProductionMap.objects.create(
+            product_map=sugar_250g,
+            quantity=200
+        )
+
+        sugar_sack.productions.add(sugar_1kg_map, sugar_500g_map, sugar_250g_map)
+
+        # Change stock amount
+        # Product1
+        stock_level = StockLevel.objects.get(store=self.store1, product=sugar_sack)
+        stock_level.units = 20
+        stock_level.save()
+
+        stock_level = StockLevel.objects.get(store=self.store2, product=sugar_sack)
+        stock_level.units = 30
+        stock_level.save()
+
+        # Product2
+        stock_level = StockLevel.objects.get(store=self.store1, product=sugar_1kg)
+        stock_level.units = 45
+        stock_level.save()
+
+        stock_level = StockLevel.objects.get(store=self.store2, product=sugar_1kg)
+        stock_level.units = 70
+        stock_level.save()
         
-  
     def get_premade_payload(self):
         """
         Simplifies creating payload
         """
+
+        sugar1kg = Product.objects.get(name='Sugar 1kg')
         
         payload = {
             'notes': 'A simple note',
@@ -1141,6 +1228,10 @@ class TransferOrderCompletedViewTestCase(APITestCase, InitialUserDataMixin):
                 {
                     'loyverse_variant_id': self.product2.loyverse_variant_id,
                     'quantity': 40,
+                },
+                {
+                    'loyverse_variant_id': sugar1kg.loyverse_variant_id,
+                    'quantity': 100,
                 }
             ]
         }
@@ -1158,6 +1249,8 @@ class TransferOrderCompletedViewTestCase(APITestCase, InitialUserDataMixin):
             payload
         )
 
+        print(response.data)
+
         self.assertEqual(response.status_code, 201)
 
         to = TransferOrder.objects.get(source_store=self.store1)
@@ -1167,7 +1260,7 @@ class TransferOrderCompletedViewTestCase(APITestCase, InitialUserDataMixin):
     
         product1 = Product.objects.get(name='Shampoo')
         product2 = Product.objects.get(name='Conditioner')
-
+        product3 = Product.objects.get(name='Sugar 50kg Sack')
 
         today = (timezone.now()).strftime("%B, %d, %Y")
 
@@ -1175,16 +1268,15 @@ class TransferOrderCompletedViewTestCase(APITestCase, InitialUserDataMixin):
         self.assertEqual(to.source_store, self.store1)
         self.assertEqual(to.destination_store, self.store2)
         self.assertEqual(to.notes, 'A simple note')
-        self.assertEqual(to.quantity, Decimal('100.00'))
+        self.assertEqual(to.quantity, Decimal('102.00'))
         self.assertEqual(to.status, TransferOrder.TRANSFER_ORDER_PENDING)
         self.assertTrue(to.reg_no > 100000) # Check if we have a valid reg_no
         self.assertEqual((to.created_date).strftime("%B, %d, %Y"), today)
         self.assertEqual(to.is_auto_created, True)
         self.assertEqual(to.source_description, 'From delivery note 1200')
 
-
         # Confirm receipt line model creation
-        self.assertEqual(TransferOrderLine.objects.filter(transfer_order=to).count(), 2)
+        self.assertEqual(TransferOrderLine.objects.filter(transfer_order=to).count(), 3)
 
         lines = TransferOrderLine.objects.filter(transfer_order=to).order_by('id')
 
@@ -1218,6 +1310,21 @@ class TransferOrderCompletedViewTestCase(APITestCase, InitialUserDataMixin):
         )
         self.assertEqual(line2.quantity, 40.00)
 
+        # TransferOrder line 3
+        line3 = lines[2]
+
+        self.assertEqual(line3.transfer_order, to)
+        self.assertEqual(line3.product, product3)
+        self.assertEqual(
+            line3.product_info, 
+            {
+                'name': product3.name,
+                'sku': product3.sku,
+                'reg_no': product3.reg_no
+            }
+        )
+        self.assertEqual(line3.quantity, 2.00)
+
     def test_if_view_can_create_an_auto_transfer_order_that_has_been_received(self):
 
         payload = self.get_premade_payload()
@@ -1243,7 +1350,7 @@ class TransferOrderCompletedViewTestCase(APITestCase, InitialUserDataMixin):
         self.assertEqual(to.source_description, 'From delivery note 1200')
 
         # Confirm receipt line model creation
-        self.assertEqual(TransferOrderLine.objects.filter(transfer_order=to).count(), 2)
+        self.assertEqual(TransferOrderLine.objects.filter(transfer_order=to).count(), 3)
 
     def test_if_view_can_handle_with_wrong_source_store_id(self):
 
@@ -1374,6 +1481,7 @@ class TransferOrderCompletedViewTestCase(APITestCase, InitialUserDataMixin):
         )
         self.assertEqual(response.status_code, 401)
 
+
 class TransferOrderViewForViewingTestCase(APITestCase, InitialUserDataMixin):
 
     def setUp(self):
@@ -1469,7 +1577,6 @@ class TransferOrderViewForViewingTestCase(APITestCase, InitialUserDataMixin):
             quantity=14,
         )
 
-
         ########### Create stock adjustment2
         self.transfer_order2 = TransferOrder.objects.create(
             user=self.user1,
@@ -1547,6 +1654,8 @@ class TransferOrderViewForViewingTestCase(APITestCase, InitialUserDataMixin):
             'completion_date': self.transfer_order2.get_completed_date(
                 self.user1.get_user_timezone()
             ),
+            'source_description': transfer_order.source_description,
+            'is_auto_created': transfer_order.is_auto_created,
             'line_data': [ 
                 {
                     'product_info': {

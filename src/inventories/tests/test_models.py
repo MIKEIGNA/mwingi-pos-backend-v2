@@ -2279,7 +2279,7 @@ class TransferOrderModelsMixin:
             transfer_order=self.transfer_order,
             product=self.product2,
             quantity=14,
-        )
+        ) 
 
     def create_product_maps_for_sugar(self):
 
