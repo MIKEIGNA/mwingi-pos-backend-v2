@@ -25,6 +25,7 @@ def trigger_error(request):
 
 urlpatterns = [
     path('', TemplateView.as_view(template_name='home.html'),name='home'),
+    
     path('magnupe/', admin.site.urls),
     path('', include("accounts.urls")),
     path('', include("billing.urls")),
@@ -32,6 +33,9 @@ urlpatterns = [
     path('', include("api.urls")),
     path('', include("sales.urls")),
     path('', include("loyverse.urls")), 
+
+    path('admin/doc/', include('django.contrib.admindocs.urls')),
+     
     
     path('sentry-debug/', trigger_error),
 ]
