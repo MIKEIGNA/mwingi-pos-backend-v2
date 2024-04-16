@@ -31,7 +31,7 @@ class TpLeanStoreIndexView(generics.ListAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     pagination_class = LeanResultsSetPagination
     filter_backends = [filters.SearchFilter]
-    search_fields = ['name',]
+    search_fields = ['name',] 
     
     def get(self, request, *args, **kwargs):
         

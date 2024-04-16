@@ -315,7 +315,6 @@ class PosReceiptIndexView(generics.ListCreateAPIView):
         )
 
         receipt = Receipt.objects.create(
-            shift=None,
             user=self.request.user,
             store=self.store,
             customer=self.customer,
@@ -334,7 +333,7 @@ class PosReceiptIndexView(generics.ListCreateAPIView):
             created_date_timestamp=serializer.validated_data['created_date_timestamp'],
             receipt_number=serializer.validated_data['receipt_number'],
             show_discount_breakdown=True
-        ) 
+        )
 
         # Create receipt payment
         self.create_receipt_payments(receipt)
@@ -661,4 +660,20 @@ class PosReceiptRefundPerLineView(generics.RetrieveUpdateAPIView):
 
 
 
-
+{
+    "is_refund": false, 
+    "tax_total": "1.38", 
+    "items_list": [
+        "0022.12.00 MM Nafuu 1kg 1.00 60.000 60.000", 
+        "Mara Moja 1.00 10.000 10.000"
+    ], 
+    "grand_total": "70.00", 
+    "invoice_pin": "P051848193C", 
+    "customer_pin": "", 
+    "invoice_date": "16/04/24", 
+    "net_subtotal": "68.62", 
+    "sel_currency": "KSH", 
+    "customer_exid": "", 
+    "invoice_number": "217-32810", 
+    "rel_doc_number": ""
+}

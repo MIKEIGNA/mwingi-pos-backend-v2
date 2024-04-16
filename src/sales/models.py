@@ -659,7 +659,6 @@ class Receipt(models.Model):
                     return []
         
         refund_receipt = Receipt.objects.create(
-            shift=None,
             user=self.user,
             store=self.store,
             customer=self.customer,
