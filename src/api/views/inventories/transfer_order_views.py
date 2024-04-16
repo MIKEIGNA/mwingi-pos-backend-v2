@@ -188,8 +188,6 @@ class TransferOrderIndexView(generics.ListCreateAPIView):
             destination_store=self.destination_store,
             notes=serializer.validated_data['notes'],
             quantity=total_quantity,
-            source_description=serializer.validated_data['source_description'],
-
         )
 
         for line in lineData:

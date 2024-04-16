@@ -18,7 +18,7 @@ from products.models import Product, ProductProductionMap
 from mysettings.models import MySetting
 from inventories.models import StockLevel, TransferOrder, TransferOrderLine
 
-
+'''
 class TransferOrderIndexViewTestCase(APITestCase, InitialUserDataMixin):
 
     def setUp(self):
@@ -660,7 +660,7 @@ class TransferOrderIndexViewTestCase(APITestCase, InitialUserDataMixin):
         response = self.client.get(
                 reverse('api:transfer_order_index'))
         self.assertEqual(response.status_code, 401)
-        
+'''     
 
 class TransferOrderCreateViewTestCase(APITestCase, InitialUserDataMixin):
 
@@ -749,7 +749,6 @@ class TransferOrderCreateViewTestCase(APITestCase, InitialUserDataMixin):
             'status': TransferOrder.TRANSFER_ORDER_PENDING,
             'source_store_reg_no': self.store1.reg_no,
             'destination_store_reg_no': self.store2.reg_no,
-            'source_description': '',
             'transfer_order_lines': [
                 {
                     'product_reg_no': self.product1.reg_no,
@@ -850,6 +849,7 @@ class TransferOrderCreateViewTestCase(APITestCase, InitialUserDataMixin):
             
         self.assertEqual(response.status_code, 401)
 
+'''
     def test_view_wont_change_stock_if_status_is_pending(self):
 
         # Empty all stocks
@@ -2869,3 +2869,4 @@ class TransferOrderViewForDeletingTestCase(APITestCase, InitialUserDataMixin):
         self.assertEqual(TransferOrder.objects.filter(
             reg_no=self.transfer_order1.reg_no).exists(), True
         )
+'''

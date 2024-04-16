@@ -1,5 +1,6 @@
 
 from decimal import Decimal
+import os
 from pprint import pprint
 from django.core.management.base import BaseCommand
 
@@ -253,7 +254,7 @@ def analyze_loss_data(data):
 
 def check(from_year, from_month, from_day, to_year, to_month, to_day):
     histories = InventoryHistory.objects.filter(
-        store__profile__user__email="email@gmail.com",
+        store__profile__user__email=os.environ.get("SECOND_USER_EMAIL"),
         reason=InventoryHistory.INVENTORY_HISTORY_SALE,
         # store__reg_no__in=[396491159149,],
         created_date__gte=datetime(from_year, from_month, from_day, 0, 0, 0, 0, timezone.utc),
@@ -276,7 +277,7 @@ def check(from_year, from_month, from_day, to_year, to_month, to_day):
 
 
     # histories = InventoryHistory.objects.filter(
-    #     store__profile__user__email="email@gmail.com",
+    #     store__profile__user__email=os.environ.get("SECOND_USER_EMAIL"),
     #     reason=InventoryHistory.INVENTORY_HISTORY_SALE,
     #     # store__reg_no__in=[396491159149,],
     #     created_date__gte=datetime(year, month, day, 0, 0, 0, 0, timezone.utc),
@@ -297,7 +298,7 @@ def check(from_year, from_month, from_day, to_year, to_month, to_day):
 
 def checkdups(from_year, from_month, from_day, to_year, to_month, to_day):
     histories = InventoryHistory.objects.filter(
-        store__profile__user__email="email@gmail.com",
+        store__profile__user__email=os.environ.get("SECOND_USER_EMAIL"),
         reason=InventoryHistory.INVENTORY_HISTORY_SALE,
         # store__reg_no__in=[423048554267,],
         # product__reg_no__in=[433654759982,],
@@ -326,7 +327,7 @@ def checkdups(from_year, from_month, from_day, to_year, to_month, to_day):
 
 def checkdups_v2(from_year, from_month, from_day, to_year, to_month, to_day):
     histories = InventoryHistory.objects.filter(
-        store__profile__user__email="email@gmail.com",
+        store__profile__user__email=os.environ.get("SECOND_USER_EMAIL"),
         reason=InventoryHistory.INVENTORY_HISTORY_SALE,
         store__reg_no__in=[423048554267,],
         product__reg_no__in=[433654759982,],
@@ -355,7 +356,7 @@ def checkdups_v2(from_year, from_month, from_day, to_year, to_month, to_day):
 
 def checkdups_v3(from_year, from_month, from_day, to_year, to_month, to_day):
     histories = InventoryHistory.objects.filter(
-        store__profile__user__email="email@gmail.com",
+        store__profile__user__email=os.environ.get("SECOND_USER_EMAIL"),
         reason=InventoryHistory.INVENTORY_HISTORY_SALE,
         # store__reg_no__in=[423048554267,],
         # product__reg_no__in=[433654759982,],
@@ -384,7 +385,7 @@ def checkdups_v3(from_year, from_month, from_day, to_year, to_month, to_day):
 
 def check_for_soft_dups(from_year, from_month, from_day, to_year, to_month, to_day):
     histories = InventoryHistory.objects.filter(
-        store__profile__user__email="email@gmail.com",
+        store__profile__user__email=os.environ.get("SECOND_USER_EMAIL"),
         reason=InventoryHistory.INVENTORY_HISTORY_SALE,
         # store__reg_no__in=[438394492861,],
         # product__reg_no__in=[475044577764,],
@@ -453,7 +454,7 @@ class Command(BaseCommand):
 
     python manage.py script_duplicates_inventory_history_for_date strict-v3 2023 12 23 2024 1 31
 
-    python manage.py script_duplicates_inventory_history_for_date strict-v3 2024 2 1 2024 03 30
+    python manage.py script_duplicates_inventory_history_for_date strict-v3 2024 4 1 2024 4 16
 
     
     Retrieve receipts for the specified hours 
